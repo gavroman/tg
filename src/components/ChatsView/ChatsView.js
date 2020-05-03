@@ -17,7 +17,7 @@ export default class AuthView extends Component {
     render() {
         return (
             <div>
-                zalupa
+                Chats
             </div>
         );
     }

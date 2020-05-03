@@ -1,27 +1,19 @@
 import 'Components/App/App.sass'
 import 'Components/App/Reset.sass'
 import AuthView from 'Components/AuthView/AuthView';
-import ChatsView from 'Components/ChatsView/ChatsView';
+import ChatsView from 'Components/ChatsView/ChatsView.js';
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 
 export default class App extends Component {
     render() {
         return (
             <div>
-                {/*<Router>*/}
-                    <Switch>
-                        <Route path="/login">
-                            <AuthView type={'login'}/>
-                        </Route>
-                        <Route path="/register">
-                            <AuthView type={'register'}/>
-                        </Route>
-                        <Route path='/'>
-                            <ChatsView/>
-                        </Route>
-                    </Switch>
-                {/*</Router>*/}
+                <Switch>
+                    <Route exact path='/register' component={() => <AuthView type={'register'}/>}/>
+                    <Route exact path="/login" component={() => <AuthView type={'login'}/>}/>
+                    <Route path='/' component={() => <ChatsView/>}/>
+                </Switch>
             </div>
         )
     }

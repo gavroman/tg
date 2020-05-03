@@ -1,12 +1,10 @@
 import 'Components/AuthView/AuthView.sass'
-
 import Button from 'Components/Button/Button.js';
 import Input from 'Components/Input/Input.js';
 import http from 'http-status-codes';
-
 import {BACKEND, fetchPost} from 'Libs/http.js';
 import React, {Component} from 'react';
-import {Link, useHistory, useLocation} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 
 export default class AuthView extends Component {
@@ -27,18 +25,17 @@ export default class AuthView extends Component {
 
     handleLogin() {
         if (this.state.passwordInput && this.state.loginInput) {
-            console.log('ZALUPA');
             const url = BACKEND + '/login';
             const body = {login: this.state.loginInput, password: this.state.passwordInput};
             fetchPost(url, body).then(response => {
                 switch (response.status) {
                     case http.OK:
                     case http.SEE_OTHER:
+                        this.setState({authorized: true});
                         break;
                     case http.NOT_FOUND:
                         console.log('Неверный логин или пароль');
                         break;
-
                 }
             })
         }
@@ -52,6 +49,7 @@ export default class AuthView extends Component {
                 switch (response.status) {
                     case http.OK:
                     case http.SEE_OTHER:
+                        this.setState({authorized: true});
                         break;
                     case http.CONFLICT:
                         console.log('Никнейм уже занят');
@@ -75,7 +73,7 @@ export default class AuthView extends Component {
                            onChange={(e) => this.setState({passwordInput: e.target.value})}/>
                     <div className={'auth-controls'}>
                         <Button type={'primary'} text={'Войти'} onClick={this.handleLogin}/>
-                        <Link className='link' to={'/register'}>Регистрация</Link>
+                        <Link className='link' to='/register'>Регистрация</Link>
                     </div>
                 </div>
             </div>
@@ -97,7 +95,7 @@ export default class AuthView extends Component {
                            onChange={(e) => this.setState({passwordRepeatInput: e.target.value})}/>
                     <div className={'auth-controls'}>
                         <Button type={'primary'} text={'Войти'} onClick={this.handleRegister}/>
-                        <Link className='link' to={'/login'}>Уже есть аккаунт?</Link>
+                        <Link className='link' to='/login'>Уже есть аккаунт?</Link>
                     </div>
                 </div>
             </div>
@@ -105,7 +103,13 @@ export default class AuthView extends Component {
     }
 
     render() {
-        return (this.type === 'login') ? this.renderLoginForm() : this.renderRegisterForm();
+        if (this.state.authorized) {
+            return (
+                <Redirect push to={'/'}/>
+            )
+        } else {
+            return (this.type === 'login') ? this.renderLoginForm() : this.renderRegisterForm();
+        }
     }
 }
 
