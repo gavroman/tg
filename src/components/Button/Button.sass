@@ -1,0 +1,45 @@
+.button
+    display: flex
+    align-items: center
+    height: 35px
+    width: fit-content
+    padding: 0 10px
+    border: 1px solid transparent
+    border-radius: 7px
+    cursor: pointer
+    font-size: 14pt
+    user-select: none
+    transition: 0.2s
+
+    &--primary
+        @extend .button
+        color: #28a745
+        background-color: transparent
+        background-image: none
+        box-shadow: 0 0 1px 1px #28a745
+
+        &:hover
+            background-color: #28a745
+            color: white
+
+    &--secondary
+        @extend .button
+        color: #007bff
+        background-color: transparent
+        background-image: none
+        box-shadow: 0 0 1px 1px #007bff
+
+        &:hover
+            background-color: #007bff
+            color: white
+
+    &--danger
+        @extend .button
+        color: #dc3545
+        background-color: transparent
+        background-image: none
+        box-shadow: 0 0 1px 1px #dc3545
+
+        &:hover
+            background-color: #dc3545
+            color: white
