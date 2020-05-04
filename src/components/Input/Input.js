@@ -5,9 +5,9 @@ export default function Input(props) {
     const type = props.type || 'text';
     const value = props.value || '';
     const className = (props.className || '') + ' input';
-    return (
-        <div>
-            <input className={className} type={type} value={value} onChange={props.onChange}/>
-        </div>
+    const placeholder = props.placeholder || '';
+        return (
+            <input className={className} type={type} value={value} placeholder={placeholder}
+                   onChange={props.onChange}/>
     );
 }

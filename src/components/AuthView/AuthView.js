@@ -2,7 +2,7 @@ import 'Components/AuthView/AuthView.sass'
 import Button from 'Components/Button/Button.js';
 import Input from 'Components/Input/Input.js';
 import http from 'http-status-codes';
-import {BACKEND, fetchPost} from 'Libs/http.js';
+import {apiLogin, apiRegister} from 'Libs/apiCalls.js';
 import React, {Component} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 
@@ -25,9 +25,7 @@ export default class AuthView extends Component {
 
     handleLogin() {
         if (this.state.passwordInput && this.state.loginInput) {
-            const url = BACKEND + '/login';
-            const body = {login: this.state.loginInput, password: this.state.passwordInput};
-            fetchPost(url, body).then(response => {
+            apiLogin(this.state.loginInput, this.state.passwordInput).then(response => {
                 switch (response.status) {
                     case http.OK:
                     case http.SEE_OTHER:
@@ -37,15 +35,13 @@ export default class AuthView extends Component {
                         console.log('Неверный логин или пароль');
                         break;
                 }
-            })
+            });
         }
     }
 
     handleRegister() {
         if (this.state.passwordInput === this.state.passwordRepeatInput) {
-            const url = BACKEND + '/register';
-            const body = {login: this.state.loginInput, password: this.state.passwordInput};
-            fetchPost(url, body).then(response => {
+            apiRegister(this.state.loginInput, this.state.passwordInput).then(response => {
                 switch (response.status) {
                     case http.OK:
                     case http.SEE_OTHER:
@@ -57,7 +53,7 @@ export default class AuthView extends Component {
                     default:
                         break;
                 }
-            })
+            });
         }
     }
 

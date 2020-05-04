@@ -3,7 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: [path.resolve(__dirname, 'src/index.js')],
+    entry: ['@babel/polyfill', path.resolve(__dirname, 'src/index.js')],
 
     output: {
         filename: 'bundle.js',
@@ -21,7 +21,7 @@ module.exports = {
         publicPath: '/',
         historyApiFallback: true,
         hot: true,
-        contentBase: [path.resolve(__dirname, 'dist')],
+        contentBase: [path.resolve(__dirname, 'dist'), path.resolve(__dirname, 'img')],
     },
     devtool: 'source-map',
 
@@ -30,9 +30,7 @@ module.exports = {
             test: /\.sass$/,
             use: [
                 'style-loader',
-                // Translates CSS into CommonJS
                 'css-loader',
-                // Compiles Sass to CSS
                 'sass-loader',
 
             ],

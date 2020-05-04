@@ -1,0 +1,63 @@
+.chats
+    border-radius: 10px
+    height: 100%
+    width: 50%
+
+    &-search
+        margin-top: 10px
+        &:focus + .chats-search-results
+            border-right: 2px solid #1a73a8
+            border-left: 2px solid #1a73a8
+            border-bottom: 2px solid #1a73a8
+
+
+        &-results
+            margin-bottom: 10px
+            padding: 10px
+            border-right: 2px solid #cac6c6
+            border-left: 2px solid #cac6c6
+            border-bottom: 2px solid #cac6c6
+            border-bottom-left-radius: 10px
+            border-bottom-right-radius: 10px
+            transition: 0.2s
+
+        &-result
+            background-color: white
+            display: flex
+            align-items: center
+            padding: 10px
+            margin-bottom: 10px
+            border-radius: 5px
+            box-shadow: -1px 1px 3px 0 #cac6c6
+            &:hover
+                background-color: #d0e7ff94
+                cursor: pointer
+            &:last-child
+                margin-bottom: 0
+
+
+    &-items
+        margin-top: 15px
+
+    &-item
+        background-color: white
+        display: flex
+        padding: 10px
+        margin-bottom: 10px
+        border-radius: 5px
+        box-shadow: 0 1px 2px 0 #cac6c6
+        &:hover
+            background-color: #d0e7ff94
+            cursor: pointer
+        &:last-child
+            margin-bottom: 0
+
+        &-avatar
+            width: 50px
+            height: 50px
+            margin-right: 10px
+        &-nickname
+            font-size: 14pt
+            font-family: 'Scada', sans-serif
+        &-last-message
+            margin-top: 15px

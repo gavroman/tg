@@ -1,5 +1,3 @@
-export const BACKEND = 'http://localhost:1717/api';
-
 export const fetchPost = (url, payload) => {
     return fetch(url, {
         headers: new Headers({'content-type': 'application/json'}),
