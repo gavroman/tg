@@ -1,6 +1,8 @@
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
-
 const path = require('path');
+const IP_ADDRESS = require('ip').address();
+const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
     entry: ['@babel/polyfill', path.resolve(__dirname, 'src/index.js')],
@@ -16,14 +18,15 @@ module.exports = {
             Libs: path.join(__dirname, 'src/libs'),
         },
     },
-    devServer: {
+    devServer: isDev ? {
+        host: IP_ADDRESS,
         port: 3333,
         publicPath: '/',
         historyApiFallback: true,
         hot: true,
         contentBase: [path.resolve(__dirname, 'dist'), path.resolve(__dirname, 'img')],
-    },
-    devtool: 'source-map',
+    } : {},
+    devtool: isDev ? 'source-map' : false,
 
     module: {
         rules: [{
@@ -38,15 +41,19 @@ module.exports = {
             test: /\.js$/,
             exclude: /node_modules/,
             use: {
-                loader: "babel-loader",
+                loader: 'babel-loader',
                 options: {
-                    presets: ['@babel/preset-env', "@babel/react"],
+                    presets: ['@babel/preset-env', '@babel/react'],
                 },
             }
         }]
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            'IP_ADDRESS': JSON.stringify(IP_ADDRESS),
+            'IS_PROD': JSON.stringify(!isDev),
+        }),
         new CopyPlugin([{
             from: path.resolve(__dirname, 'src/index.html'),
             to: path.resolve(__dirname, 'dist/index.html'),

@@ -6,7 +6,6 @@ import {apiGetChats} from 'Libs/apiCalls.js';
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 
-
 export default class ChatsView extends Component {
     constructor(props) {
         super(props);

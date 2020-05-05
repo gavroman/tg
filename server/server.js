@@ -5,16 +5,40 @@ const expressWs = require('express-ws')(app);
 const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
+const IP_ADDRESS = require('ip').address();
+const IS_DEV = process.env.NODE_ENDV === 'development';
+
 const Handlers = require('./handlers.js');
 
 app.use(morgan('dev'));
-const corsOptions = {
-    credentials: true,
-    origin: 'http://localhost:3333',
-};
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser('secretsecrethfb4234cjkasdhnkeadsa'));
+
+if (IS_DEV) {
+    const corsWhitelist = [
+        'http://localhost:3333',
+        'http://192.168.0.104:3333',
+        'http://89.208.197.150:3333',
+        'http://localhost:1717',
+        'http://192.168.0.104:1717',
+        'http://89.208.197.150:1717',
+    ];
+    const corsOptions = {
+        credentials: true,
+        origin: function (origin, callback) {
+            if (corsWhitelist.indexOf(origin) !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS ' + origin))
+            }
+        }
+    };
+    app.use(cors(corsOptions));
+}
+
+
+
 app.disable('x-powered-by');
 
 const storage = {
@@ -48,6 +72,16 @@ app.get('/api/chats/:user', handlers.getMessages);
 
 const websocketClients = new Map();
 app.ws('/ws', handlers.websocketHandler);
+
+if (!IS_DEV) {
+    const distFolder = path.resolve(__dirname, '../', 'dist');
+    const imgFolder = path.resolve(__dirname, '../', 'img');
+    app.use(express.static(distFolder));
+    app.use(express.static(imgFolder));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(distFolder, 'index.html'));
+    });
+}
 
 app.listen(1717, () => console.log(`HTTP server started`));
 

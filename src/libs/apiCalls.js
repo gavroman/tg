@@ -1,7 +1,7 @@
 import {fetchGet, fetchPost} from 'Libs/http.js';
 
-const BACKEND = 'http://localhost:1717/api';
-const WEBSOCKET = 'ws://localhost:1717/ws';
+const BACKEND = `http://${IP_ADDRESS}:1717/api`;
+const WEBSOCKET = `ws://${IP_ADDRESS}:1717/ws`;
 
 export const apiLogin = (login, password) => {
     const url = BACKEND + '/login';
