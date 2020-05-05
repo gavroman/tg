@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
-const IP_ADDRESS = require('ip').address();
+
 const isDev = process.env.NODE_ENV === 'development';
+const IP_ADDRESS = process.env.NODE_IP || require('ip').address();
 
 module.exports = {
     entry: ['@babel/polyfill', path.resolve(__dirname, 'src/index.js')],
