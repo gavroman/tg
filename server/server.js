@@ -37,8 +37,6 @@ if (IS_DEV) {
     app.use(cors(corsOptions));
 }
 
-
-
 app.disable('x-powered-by');
 
 const storage = {
@@ -69,8 +67,6 @@ app.post('/api/login', handlers.login);
 app.get('/api/search', handlers.search);
 app.get('/api/chats', handlers.getChats);
 app.get('/api/chats/:user', handlers.getMessages);
-
-const websocketClients = new Map();
 app.ws('/ws', handlers.websocketHandler);
 
 if (!IS_DEV) {
@@ -84,8 +80,4 @@ if (!IS_DEV) {
 }
 
 app.listen(1717, () => console.log(`HTTP server started`));
-
-
-
-
 
