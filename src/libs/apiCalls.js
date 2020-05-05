@@ -1,7 +1,7 @@
 import {fetchGet, fetchPost} from 'Libs/http.js';
 
-export const BACKEND = 'http://localhost:1717/api';
-export const WEBSOCKET = 'ws://localhost:1717/ws';
+const BACKEND = 'http://localhost:1717/api';
+const WEBSOCKET = 'ws://localhost:1717/ws';
 
 export const apiLogin = (login, password) => {
     const url = BACKEND + '/login';
@@ -27,3 +27,60 @@ export const apiGetMessages = (nickname) => {
     const url = `${BACKEND}/chats/${nickname}`;
     return fetchGet(url);
 };
+
+
+export const apiWebsocket = (() => {
+    let instance;
+    const messageSubscribers = [];
+    const closeSubscribers = [];
+    const errorSubscribers = [];
+
+    const createInstance = () => {
+        const socket = new WebSocket(WEBSOCKET);
+        socket.onmessage = (event) => {
+            messageSubscribers.forEach(handler => {
+                handler(event);
+            });
+        };
+        socket.onclose = (event) => {
+            closeSubscribers.forEach(handler => {
+                handler(event);
+            });
+        };
+        socket.onerror = (event) => {
+            errorSubscribers.forEach(handler => {
+                handler(event);
+            });
+        };
+        instance = {
+            subscribe: (eventType, handler) => {
+                switch (eventType) {
+                    case 'message':
+                        messageSubscribers.push(handler);
+                        break;
+                    case 'close':
+                        closeSubscribers.push(handler);
+                        break;
+                    case 'error':
+                        errorSubscribers.push(handler);
+                        break;
+                    default:
+                        break;
+                }
+            },
+            send: (dataString) => {
+                socket.send(dataString);
+            }
+        };
+        return instance;
+    };
+
+    return {
+        instance: (() => {
+            if (!instance) {
+                instance = createInstance();
+            }
+            return instance;
+        })()
+    };
+})();

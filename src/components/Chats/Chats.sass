@@ -1,10 +1,14 @@
+.search-wrpper
+    margin-right: 15px
+
 .chats
     border-radius: 10px
     height: 100%
-    width: 50%
+    max-width: 35%
+    min-width: 35%
+    overflow: overlay
 
     &-search
-        margin-top: 10px
         &:focus + .chats-search-results
             border-right: 2px solid #1a73a8
             border-left: 2px solid #1a73a8
@@ -22,12 +26,12 @@
             transition: 0.2s
 
         &-result
-            background-color: white
             display: flex
             align-items: center
             padding: 10px
             margin-bottom: 10px
             border-radius: 5px
+            background-color: #dadada
             box-shadow: -1px 1px 3px 0 #cac6c6
             &:hover
                 background-color: #d0e7ff94
@@ -38,14 +42,19 @@
 
     &-items
         margin-top: 15px
+        margin-right: 15px
+        overflow: overlay
 
     &-item
-        background-color: white
         display: flex
         padding: 10px
         margin-bottom: 10px
         border-radius: 5px
+        background-color: #dadada
         box-shadow: 0 1px 2px 0 #cac6c6
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden
         &:hover
             background-color: #d0e7ff94
             cursor: pointer

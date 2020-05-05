@@ -35,7 +35,7 @@ module.exports = class handlers {
             res.status(http.CONFLICT).send();
         } else {
             users.set(body.login, body.password);
-            res.cookie('session_id', body.login, {maxAge: 90000000, httpOnly: false, secure: false, signed: true});
+            res.cookie('session_id', body.login, {maxAge: 90000000, httpOnly: true, secure: false, signed: true});
             res.status(http.OK).send();
         }
     }
@@ -47,7 +47,7 @@ module.exports = class handlers {
         }
         const users = this.storage.users;
         if (users.get(req.body.login) === req.body.password) {
-            res.cookie('session_id', req.body.login, {maxAge: 90000000, httpOnly: false, secure: false, signed: true});
+            res.cookie('session_id', req.body.login, {maxAge: 90000000, httpOnly: true, secure: false, signed: true});
             res.status(http.OK).send();
         } else {
             res.status(http.NOT_FOUND).send();
@@ -55,12 +55,15 @@ module.exports = class handlers {
     }
 
     search(req, res) {
-        if (!this.getNicknameByCookie(req)) {
+        const nickname = this.getNicknameByCookie(req);
+        if (!nickname) {
             res.status(http.UNAUTHORIZED).send();
             return;
         }
         const nicknamePart = req.query.nicknamePart;
-        const results = [...this.storage.users.keys()].filter(user => user.includes(nicknamePart));
+        const results = [...this.storage.users.keys()].filter((user) => {
+            return user.includes(nicknamePart) && user !== nickname;
+        });
         res.status(http.OK).send(results);
     }
 
@@ -72,7 +75,10 @@ module.exports = class handlers {
         }
         let chats = this.storage.chats
             .filter(chat => chat.members.has(nickname))
-            .map(chat => ({members: [...chat.members].filter(member => member !== nickname)}));
+            .map(chat => ({
+                members: [...chat.members].filter(member => member !== nickname),
+                lastMessage: chat.lastMessage,
+            }));
         res.status(http.OK).send({chats});
     }
 
@@ -118,19 +124,25 @@ module.exports = class handlers {
 
         ws.on('message', (string) => {
             const message = JSON.parse(string);
-            // console.log(message);
             const receiver = message.to;
             if (!this.storage.users.has(receiver)) {
                 return
             }
-            console.log('WS', nickname, 'MSG:', receiver, message.text);
-            if (!this.storage.chats.some(chat => chat.members.has(nickname) && chat.members.has(nickname))) {
-                this.storage.chats.push({members: new Set([nickname, receiver])})
+
+            let messageChat = this.storage.chats.find(chat => {
+                 return chat.members.has(nickname) && chat.members.has(receiver);
+            });
+
+            if (!messageChat) {
+                this.storage.chats.push({
+                    members: new Set([nickname, receiver]),
+                    lastMessage: message.text,
+                })
+            } else {
+                messageChat.lastMessage = message.text;
             }
 
             this.storage.messages.push({from: nickname, to: receiver, text: message.text});
-            // console.log(this.storage.messages);
-            // console.log(this.storage.chats);
 
             if (this.wsClients.has(receiver)) {
                 const receiverClient = this.wsClients.get(receiver);

@@ -19,23 +19,25 @@ app.disable('x-powered-by');
 
 const storage = {
     users: new Map([
-        ['asdasd', '1'],
-        ['qweasd', '1'],
+        ['4taa', '1'],
+        ['gavroman', '1'],
+        ['gromofon', '1'],
+        ['gromogon', '1'],
+        ['garvroar', '1'],
         ['qwezxc', '1'],
         ['asdzxc', '1'],
-        ['qweqwe', 'qweqwe'],
+        ['zxczxc', '1'],
+        ['qweqwe', '1'],
+        ['qweasd', '1'],
+        ['qwezxc', '1'],
+        ['zxcqwe', '1'],
+        ['zxcasd', '1'],
+        ['zxczxc', '1'],
     ]),
     sessions: {},
     chats: [],
     messages: [],
 };
-
-storage.chats = [
-    {members: new Set(['qweqwe', 'asdasd'])},
-    {members: new Set(['qweqwe', 'qweasd'])},
-    {members: new Set(['qweqwe', 'qwezxc'])},
-    {members: new Set(['qweqwe', 'asdzxc'])},
-];
 
 const handlers = new Handlers(storage);
 app.post('/api/register', handlers.register);

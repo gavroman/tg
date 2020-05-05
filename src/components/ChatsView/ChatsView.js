@@ -15,6 +15,8 @@ export default class ChatsView extends Component {
         };
 
         this.openChat = this.openChat.bind(this);
+        this.getChats = this.getChats.bind(this);
+        this.handleMessageSend = this.handleMessageSend.bind(this);
     }
 
     getChats() {
@@ -34,6 +36,7 @@ export default class ChatsView extends Component {
         });
     }
 
+
     componentDidMount() {
         this.getChats()
     }
@@ -42,14 +45,28 @@ export default class ChatsView extends Component {
         this.setState({chatWith: nickname});
     }
 
+    handleMessageSend(messageData) {
+        this.setState({
+            lastChat: {
+                lastMessage: messageData.text,
+                members: [messageData.to],
+            }
+        });
+    }
+
     render() {
         if (this.state.unauthorized) {
             return <Redirect to={'/login'}/>
         }
         return (
-            <div className={'chats-view'}>
-                <Chats onChatOpen={this.openChat}/>
-                {(this.state.chatWith) ? <Chat key={this.state.chatWith} with={this.state.chatWith}/> : <div>Empty</div>}
+            <div className={'chats-scrollable'}>
+                <div className={'chats-view'}>
+                    <Chats onChatOpen={this.openChat} updatedOrNewChat={this.state.lastChat}/>
+                    {(this.state.chatWith)
+                        ? <Chat key={this.state.chatWith} with={this.state.chatWith}
+                                onMessageSend={this.handleMessageSend}/>
+                        : <div/>}
+                </div>
             </div>
         );
     }
