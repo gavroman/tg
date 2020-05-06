@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_TARGET === 'development';
 const IP_ADDRESS = process.env.NODE_IP || require('ip').address();
 
 module.exports = {
@@ -61,3 +61,5 @@ module.exports = {
         }]),
     ],
 };
+
+console.log(JSON.stringify(IP_ADDRESS));

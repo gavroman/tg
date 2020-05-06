@@ -4,8 +4,10 @@
   "description": "",
   "scripts": {
     "start": "npm run dev",
-    "dev": "NODE_ENV=development webpack-dev-server --open",
-    "prod": "webpack && IS_PROD=true node server/server.js"
+    "dev": "NODE_TARGET=development webpack-dev-server --open",
+    "prod": "webpack && npm run front && npm run back",
+    "back": "forever start servers/backend/server.js",
+    "front": "forever start servers/frontend/server.js"
   },
   "author": "",
   "license": "ISC",
